@@ -1097,7 +1097,7 @@ __myevic__ void Main()
 			if ( SplashTimer )
 			{
 				--SplashTimer;
-				
+
 				if ( !SplashTimer )
 				{
 					MainView();
@@ -1125,4 +1125,3 @@ __myevic__ void Main()
 
 	}
 }
-

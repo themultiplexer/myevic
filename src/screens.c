@@ -24,6 +24,7 @@ uint8_t		EditItemIndex;
 uint16_t	EditModeTimer;
 
 uint8_t		ShowWeakBatFlag;
+uint16_t 	AddictedCooldown;
 uint8_t		BatAnimLevel;
 
 
@@ -192,7 +193,10 @@ __myevic__ void DrawScreen()
 			case 107:
 				ShowPowerCurve();
 				break;
-			
+
+			case 108:
+				ShowAddicted();
+				break;
 			default:
 				break;
 		}
@@ -308,6 +312,7 @@ __myevic__ void DrawScreen()
 		case  56: // Check Battery
 		case  57: // Check USB Adapter
 		case  58: // Charge Error
+		case  108: // Addicted
 			MainView();
 			break;
 
@@ -860,6 +865,14 @@ __myevic__ void ShowWeakBat()
 }
 
 
+__myevic__ void ShowAddicted()
+{
+	DrawValue( 12, 40, AddictedCooldown, 0, 0x1F, 5 );
+	DrawStringCentered( String_Weak, 106 );
+	DrawStringCentered( String_Addict, 118 );
+}
+
+
 //=========================================================================
 __myevic__ void ShowRTCAdjust()
 {
@@ -984,7 +997,7 @@ __myevic__ void ShowSetDate()
 //=========================================================================
 __myevic__ int IsMenuScreen()
 {
-	return (( Screen >= 101 ) && ( Screen <= 107 ));
+	return (( Screen >= 101 ) && ( Screen <= 108 ));
 }
 
 
@@ -1095,7 +1108,7 @@ __myevic__ int SplashExists()
 
 	h = img->height;
 	l = img->width * h / 8;
-	
+
 	if ( img->width != 64 ) return 0;
 
 	for ( i = 0 ; i < l ; ++i )

@@ -568,7 +568,7 @@ __myevic__ void DFCheckValuesValidity()
 	if ( dfTCPower > MaxTCPower || dfTCPower < 10 )
 		dfTCPower = 200;
 
-	if ( dfPuffCount > 99999 || dfTimeCount > 999999 )
+	if ( dfPuffCount > 99999 /*|| dfTimeCount > 999999 */)
 	{
 		dfPuffCount = 0;
 		dfTimeCount = 0;
@@ -1624,6 +1624,6 @@ __myevic__ int IsProfileValid( int p )
 	{
 		return 1;
 	}
-	
+
 	return 0;
 }

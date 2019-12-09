@@ -5,6 +5,7 @@
 #include "battery.h"
 #include "miscs.h"
 #include "events.h"
+#include "myrtc.h"
 #include "dataflash.h"
 #include "timers.h"
 #include "meadc.h"
@@ -16,9 +17,7 @@
 
 volatile uint8_t Event;
 uint8_t	LastEvent;
-
 uint8_t	WattsInc;
-
 //-------------------------------------------------------------------------
 
 uint16_t	NewRez;
@@ -62,7 +61,6 @@ __myevic__ void PowerPlus( uint16_t *pwr, uint16_t min, uint16_t max )
 		*pwr += 10;
 	}
 }
-
 
 //-------------------------------------------------------------------------
 
@@ -246,6 +244,21 @@ __myevic__ void EventHandler()
 				Event = 28;
 				gFlags.low_battery = 1;
 				return;
+			}
+
+
+			S_RTC_TIME_DATA_T now;
+			GetRTC( &now );
+			uint32_t seconds = now.u32Hour * 3600 + now.u32Minute * 60 + now.u32Second;
+
+			if (dfPuffCount % 10 == 0) {
+				if (seconds - dfTimeCount < 120){
+					AddictedCooldown = 120 - (seconds - dfTimeCount);
+					gFlags.refresh_display = 1;
+					Screen = 108;
+					ScreenDuration = 2;
+					return;
+				}
 			}
 
 			if ( BoardTemp >= 70 )
@@ -519,7 +532,7 @@ __myevic__ void EventHandler()
 							{
 								dfResistance = NewRez;
 								RezMillis = NewMillis;
-								
+
 								dfRezTCR = NewRez;
 								dfMillis = ( dfMillis & ~0xf000 ) | ( NewMillis << 12 );
 							}
@@ -559,8 +572,6 @@ __myevic__ void EventHandler()
 					gFlags.led_on = 1;
 				}
 			}
-
-		//	myprintf( "StartFire\n" );
 
 			gFlags.firing = 1;
 			FireDuration = 0;
@@ -984,11 +995,11 @@ __myevic__ void EventHandler()
 				if ( ISPRIMO2 || ISPREDATOR )
 				{
 					USBMaxLoad = 3;
-				} 
-				else 
+				}
+				else
 				{
 					USBMaxLoad = 2;
-				}				
+				}
 			}
 			else
 			{

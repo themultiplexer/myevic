@@ -348,9 +348,14 @@ __myevic__ void StopFire()
 
 		if ( FireDuration > 5 )
 		{
-			dfTimeCount += FireDuration;
-			if ( dfTimeCount > 999999 ) dfTimeCount = 0;
+			//dfTimeCount += FireDuration;
+			//if ( dfTimeCount > 999999 ) dfTimeCount = 0;
 			if ( ++dfPuffCount > 99999 ) dfPuffCount = 0;
+
+			S_RTC_TIME_DATA_T now;
+			GetRTC( &now );
+			dfTimeCount = now.u32Hour * 3600 + now.u32Minute * 60 + now.u32Second;
+
 			UpdatePTTimer = 80;
 		}
 
